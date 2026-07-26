@@ -1,11 +1,18 @@
-# きぶんめし (Kibunmeshi)
+<div align="center">
 
-> 今日の気分を選ぶだけで、ぴったりのごはんと心に寄り添う一言をお届けするWebサービス
+# 🍽️ きぶんめし (Kibunmeshi)
+
+**今日の気分を選ぶだけで、ぴったりのごはんと心に寄り添う一言をお届けするWebサービス**
 
 [![Java](https://img.shields.io/badge/Java-17-orange)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-green)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue)](https://www.postgresql.org/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)](https://www.mysql.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+![Demo](https://via.placeholder.com/800x400/FFD700/000000?text=きぶんめし+Demo+Screenshot)
+
+</div>
 
 ---
 
@@ -15,68 +22,92 @@
 
 **きぶんめし**は、ユーザーの現在の気分に合わせて最適な料理を推薦し、心に寄り添う一言を届けるWebサービスです。
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│   😊 気分を選択 → 🍽️ カテゴリを選択 → 🎲 料理推薦           │
+│                                                             │
+│              💬 心に寄り添う一言と一緒に                     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
 - **開発期間**: 2週間（14日間）
-- **ターゲットユーザー**: 日本在住の20〜30代
+- **ターゲットユーザー**: 日本人
 - **コア機能**: 気分選択 + 料理カテゴリ選択 → 料理推薦 + アドバイス提供
 
 ### ✨ 主な機能
 
-#### MVP機能（必須）
-- **😊 気分選択**: 6種類の気分（うれしい、かなしい、おこ、つかれた、わくわく、おだやか）から選択
-- **🍽️ 料理カテゴリ選択**: 韓国料理、洋食、中華、和食、その他から選択
-- **🎲 料理推薦**: 選択した気分とカテゴリに合った料理をランダム推薦
-- **💬 アドバイス表示**: 料理に合わせた心に寄り添う一言を表示
-- **📸 料理画像表示**: Unsplash APIで美しい料理写真を表示
-- **🔄 再推薦機能**: 同じ条件で別の料理を再推薦
-
-#### 拡張機能（オプション）
-- 推薦履歴の保存・参照
-- お気に入り機能
-- ユーザーログイン
+| 機能 | 説明 |
+|------|------|
+| **😊 気分選択** | 6種類の気分（うれしい、かなしい、おこ、つかれた、わくわく、おだやか）から選択 |
+| **🍽️ カテゴリ選択** | 韓国料理、洋食、中華、和食、その他から選択 |
+| **🎲 料理推薦** | 選択した気分とカテゴリに合った料理をランダム推薦 |
+| **💬 アドバイス表示** | 料理に合わせた心に寄り添う一言を表示 |
+| **📸 料理画像** | Unsplash APIで美しい料理写真を表示 |
+| **🔄 再推薦** | 同じ条件で別の料理を再推薦 |
 
 ### 🛠️ 技術スタック
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        フロントエンド                         │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
+│  │  Thymeleaf  │    │   HTML5     │    │    CSS3     │     │
+│  └─────────────┘    └─────────────┘    └─────────────┘     │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                       バックエンド                           │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
+│  │Spring Boot  │    │Spring       │    │  MyBatis    │     │
+│  │   3.2.5      │    │ Security    │    │             │     │
+│  └─────────────┘    └─────────────┘    └─────────────┘     │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                        データベース                          │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
+│  │ PostgreSQL  │    │   MySQL     │    │  Unsplash   │     │
+│  │    15       │    │   8.0       │    │    API      │     │
+│  └─────────────┘    └─────────────┘    └─────────────┘     │
+│                                              │                │
+│                                              ▼                │
+│                                    ┌─────────────┐           │
+│                                    │  Gemini     │           │
+│                                    │    API      │           │
+│                                    └─────────────┘           │
+└─────────────────────────────────────────────────────────────┘
+```
+
 | カテゴリ | 技術 |
 |---------|------|
-| **バックエンド** | Spring Boot 3.x, Spring Security, MyBatis |
-| **フロントエンド** | Thymeleaf, HTML5, CSS3 |
-| **データベース** | MySQL 8.0 |
-| **外部API** | Unsplash（料理画像） |
-| **ビルドツール** | Gradle |
 | **言語** | Java 17 |
+| **フレームワーク** | Spring Boot 3.2.5 |
+| **テンプレート** | Thymeleaf |
+| **データベース** | PostgreSQL 15 / MySQL 8.0 |
+| **ORM** | MyBatis |
+| **セキュリティ** | Spring Security |
+| **ビルドツール** | Gradle 8.x |
+| **外部API** | Unsplash (料理画像), Gemini API (アドバイス生成) |
 
-### 🏗️ アーキテクチャ
-
-```
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Browser   │◄──►│Spring Boot  │◄──►│   MySQL     │
-│  (Thymeleaf)│    │  Controller │    │  Database   │
-└─────────────┘    └─────────────┘    └─────────────┘
-                        │
-                        ▼
-                   ┌─────────────┐
-                   │  Unsplash   │
-                   │    API      │
-                   └─────────────┘
-```
-
-### 📊 データベース設計
+### 📊 データベース構造
 
 - **emotions**: 6種類の気分マスター
 - **food_categories**: 5種類の料理カテゴリマスター
 - **foods**: 気分×カテゴリの組み合わせ（90〜120品）
 - **food_advice_templates**: アドバイステンプレート
 
-詳細なDB設計は [`docs/4_kibunmeshi-database-spec.md`](./docs/4_kibunmeshi-database-spec.md) を参照してください。
-
 ### 🚀 セットアップ
 
 #### 前提条件
 - Java 17以上
-- MySQL 8.0以上
+- PostgreSQL 15以上 または MySQL 8.0以上
 - Gradle 8.x
 
-#### 手順
+#### イ ンストール手順
 
 1. **リポジトリのクローン**
 ```bash
@@ -84,22 +115,30 @@ git clone https://github.com/AN-ILGWON/Kibunmeshi.git
 cd Kibunmeshi
 ```
 
-2. **データベースの設定**
+2. **データベースの作成**
 ```sql
+-- PostgreSQLの場合
 CREATE DATABASE kibunmeshi;
+
+-- MySQLの場合
+CREATE DATABASE kibunmeshi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 3. **application.ymlの設定**
 ```yaml
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/kibunmeshi
+    # PostgreSQLの場合
+    url: jdbc:postgresql://localhost:5432/kibunmeshi
+    # MySQLの場合
+    # url: jdbc:mysql://localhost:3306/kibunmeshi
     username: your_username
     password: your_password
 ```
 
-4. **Unsplash APIキーの取得**
+4. **APIキーの取得**
 - [Unsplash Developers](https://unsplash.com/developers) でAPIキーを取得
+- [Google AI Studio](https://makersuite.google.com/app/apikey) でGemini APIキーを取得
 - `application.yml` に設定
 
 5. **アプリケーションの起動**
@@ -113,26 +152,25 @@ spring:
 ### 📱 画面遷移
 
 ```
-トップ（気分選択）
-    ↓
-カテゴリ選択
-    ↓
-結果表示（料理推薦 + アドバイス）
-    ↓
-再推薦 / 最初から
+┌─────────────┐
+│  トップ画面  │  気分を選択
+│  (気分選択)  │ ──────────►
+└─────────────┘
+                │
+                ▼
+┌─────────────┐
+│ カテゴリ選択 │  カテゴリを選択
+│             │ ──────────►
+└─────────────┘
+                │
+                ▼
+┌─────────────┐
+│  結果画面    │  料理推薦 + アドバイス
+│             │  再推薦 / 最初から
+└─────────────┘
 ```
 
-詳細な画面仕様は [`docs/3_kibunmeshi-screen-spec.md`](./docs/3_kibunmeshi-screen-spec.md) を参照してください。
-
-### 📄 プロジェクトドキュメント
-
-- [要件定義書](./docs/2_kibunmeshi-requirements.md) - 機能要件、非機能要件
-- [画面定義書](./docs/3_kibunmeshi-screen-spec.md) - 画面仕様、UIコンポーネント
-- [データベース設計書](./docs/4_kibunmeshi-database-spec.md) - ER図、テーブル定義
-- [開発ログ](./docs/6_kibunmeshi-development-log.md) - 開発日記
-- [環境設定ガイド](./docs/6_환경설정가이드.md) - セットアップ手順
-
-### 🎨 デザイン
+### 🎨 デザイン特徴
 
 - **モバイルファースト**: 375px〜1920pxに対応
 - **レスポンシブデザイン**: モバイル、タブレット、デスクトップに対応
@@ -141,17 +179,18 @@ spring:
 
 ### 🔮 今後の拡張計画
 
-#### Phase 2（3〜4週目予定）
+#### Phase 2
 - [ ] SNSシェア機能（Twitter/X、LINE）
-- [ ] 運勢連携（今日の運勢と料理マッチング）
 - [ ] レシピ連携（外部レシピサイトへのリンク）
 
-#### Phase 3（2ヶ月後）
+#### Phase 3
 - [ ] AIベース推薦（Gemini API連携）
 - [ ] ユーザーパターン学習
 - [ ] コミュニティ機能
 
+### 📝 ライセンス
 
+MIT License
 
 ---
 
@@ -161,44 +200,92 @@ spring:
 
 **Kibunmeshi** is a web service that recommends the perfect food based on your current mood and delivers a comforting message.
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│   😊 Select Mood → 🍽️ Select Category → 🎲 Get Food       │
+│                                                             │
+│              💬 With a heartwarming message                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
 - **Development Period**: 2 weeks (14 days)
-- **Target Users**: Japanese residents aged 20-30
+- **Target Users**: Japanese
 - **Core Function**: Mood selection + Food category selection → Food recommendation + Advice
 
 ### ✨ Key Features
 
-#### MVP Features (Essential)
-- **😊 Mood Selection**: Choose from 6 moods (happy, sad, angry, tired, excited, calm)
-- **🍽️ Food Category Selection**: Korean, Western, Chinese, Japanese, Others
-- **🎲 Food Recommendation**: Random recommendation based on mood and category
-- **💬 Advice Display**: Heartwarming message tailored to the food
-- **📸 Food Image Display**: Beautiful food photos via Unsplash API
-- **🔄 Re-recommendation**: Get different recommendations with same criteria
-
-#### Extended Features (Optional)
-- Recommendation history save/view
-- Favorites functionality
-- User login
+| Feature | Description |
+|---------|-------------|
+| **😊 Mood Selection** | Choose from 6 moods (happy, sad, angry, tired, excited, calm) |
+| **🍽️ Category Selection** | Korean, Western, Chinese, Japanese, Others |
+| **🎲 Food Recommendation** | Random recommendation based on mood and category |
+| **💬 Advice Display** | Heartwarming message tailored to the food |
+| **📸 Food Images** | Beautiful food photos via Unsplash API |
+| **🔄 Re-recommendation** | Get different recommendations with same criteria |
 
 ### 🛠️ Tech Stack
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        Frontend                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
+│  │  Thymeleaf  │    │   HTML5     │    │    CSS3     │     │
+│  └─────────────┘    └─────────────┘    └─────────────┘     │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                         Backend                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
+│  │Spring Boot  │    │Spring       │    │  MyBatis    │     │
+│  │   3.2.5      │    │ Security    │    │             │     │
+│  └─────────────┘    └─────────────┘    └─────────────┘     │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                        Database                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
+│  │ PostgreSQL  │    │   MySQL     │    │  Unsplash   │     │
+│  │    15       │    │   8.0       │    │    API      │     │
+│  └─────────────┘    └─────────────┘    └─────────────┘     │
+│                                              │                │
+│                                              ▼                │
+│                                    ┌─────────────┐           │
+│                                    │  Gemini     │           │
+│                                    │    API      │           │
+│                                    └─────────────┘           │
+└─────────────────────────────────────────────────────────────┘
+```
+
 | Category | Technology |
-|---------|-----------|
-| **Backend** | Spring Boot 3.x, Spring Security, MyBatis |
-| **Frontend** | Thymeleaf, HTML5, CSS3 |
-| **Database** | MySQL 8.0 |
-| **External API** | Unsplash (food images) |
-| **Build Tool** | Gradle |
+|----------|------------|
 | **Language** | Java 17 |
+| **Framework** | Spring Boot 3.2.5 |
+| **Template** | Thymeleaf |
+| **Database** | PostgreSQL 15 / MySQL 8.0 |
+| **ORM** | MyBatis |
+| **Security** | Spring Security |
+| **Build Tool** | Gradle 8.x |
+| **External API** | Unsplash (food images), Gemini API (advice generation) |
+
+### 📊 Database Structure
+
+- **emotions**: 6 mood types master data
+- **food_categories**: 5 food category master data
+- **foods**: Mood × Category combinations (90-120 items)
+- **food_advice_templates**: Advice templates
 
 ### 🚀 Setup
 
 #### Prerequisites
 - Java 17+
-- MySQL 8.0+
+- PostgreSQL 15+ or MySQL 8.0+
 - Gradle 8.x
 
-#### Steps
+#### Installation Steps
 
 1. **Clone repository**
 ```bash
@@ -206,22 +293,30 @@ git clone https://github.com/AN-ILGWON/Kibunmeshi.git
 cd Kibunmeshi
 ```
 
-2. **Database setup**
+2. **Create database**
 ```sql
+-- For PostgreSQL
 CREATE DATABASE kibunmeshi;
+
+-- For MySQL
+CREATE DATABASE kibunmeshi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 3. **Configure application.yml**
 ```yaml
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/kibunmeshi
+    # For PostgreSQL
+    url: jdbc:postgresql://localhost:5432/kibunmeshi
+    # For MySQL
+    # url: jdbc:mysql://localhost:3306/kibunmeshi
     username: your_username
     password: your_password
 ```
 
-4. **Get Unsplash API Key**
+4. **Get API Keys**
 - Get API key from [Unsplash Developers](https://unsplash.com/developers)
+- Get API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
 - Configure in `application.yml`
 
 5. **Run application**
@@ -232,18 +327,48 @@ spring:
 6. **Access**
 - Open browser at `http://localhost:8080`
 
-### 📄 Project Documentation
+### � Screen Flow
 
+```
+┌─────────────┐
+│  Home Page  │  Select mood
+│ (Mood Select)│ ──────────►
+└─────────────┘
+                │
+                ▼
+┌─────────────┐
+│Category Select│  Select category
+│             │ ──────────►
+└─────────────┘
+                │
+                ▼
+┌─────────────┐
+│ Result Page │  Food recommendation + advice
+│             │  Re-recommend / Start over
+└─────────────┘
+```
 
-- [Requirements Specification](./docs/2_kibunmeshi-requirements.md) - Functional/non-functional requirements
-- [Screen Specification](./docs/3_kibunmeshi-screen-spec.md) - Screen specs, UI components
-- [Database Design](./docs/4_kibunmeshi-database-spec.md) - ER diagram, table definitions
-- [Development Log](./docs/6_kibunmeshi-development-log.md) - Development diary
-- [Environment Setup Guide](./docs/6_환경설정가이드.md) - Setup instructions
+### 🎨 Design Features
 
+- **Mobile-first**: Responsive design for 375px-1920px
+- **Responsive**: Supports mobile, tablet, and desktop
+- **Colorful UI**: Different colors for each mood
+- **Simple UX**: Get results in just 2 clicks
 
+### 🔮 Future Plans
 
+#### Phase 2
+- [ ] SNS sharing (Twitter/X, LINE)
+- [ ] Recipe integration (links to external recipe sites)
 
+#### Phase 3
+- [ ] AI-based recommendations (Gemini API integration)
+- [ ] User pattern learning
+- [ ] Community features
+
+### 📝 License
+
+MIT License
 
 ---
 
@@ -253,44 +378,92 @@ spring:
 
 **키분메시**는 사용자의 현재 기분에 맞는 최적의 음식을 추천하고 마음에 위로가 되는 한 마디를 전달하는 웹 서비스입니다.
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│   😊 기분 선택 → 🍽️ 카테고리 선택 → 🎲 음식 추천           │
+│                                                             │
+│              💬 마음을 위로하는 한 마디와 함께               │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
 - **제작 기간**: 2주일 (14일간)
-- **타겟 사용자**: 일본에 거주하는 20~30대
+- **타겟 사용자**: 일본에 거주하는 대상
 - **핵심 기능**: 감정 선택 + 음식 카테고리 선택 → 음식 추천 + 조언 제공
 
 ### ✨ 주요 기능
 
-#### MVP 기능 (필수)
-- **😊 감정 선택**: 6가지 기분 (기쁨, 슬픔, 화남, 피곤, 신남, 평온) 중 선택
-- **🍽️ 음식 카테고리 선택**: 한식, 양식, 중식, 일식, 기타 중 선택
-- **🎲 음식 추천**: 선택한 감정과 카테고리에 맞는 음식 랜덤 추천
-- **💬 조언 표시**: 음식에 어울리는 마음을 위로하는 한 마디
-- **📸 음식 이미지 표시**: Unsplash API로 아름다운 음식 사진 표시
-- **🔄 재추천 기능**: 같은 조건으로 다른 음식 재추천
-
-#### 확장 기능 (옵션)
-- 추천 히스토리 저장·조회
-- 즐겨찾기 기능
-- 사용자 로그인
+| 기능 | 설명 |
+|------|------|
+| **😊 감정 선택** | 6가지 기분 (기쁨, 슬픔, 화남, 피곤, 신남, 평온) 중 선택 |
+| **🍽️ 카테고리 선택** | 한식, 양식, 중식, 일식, 기타 중 선택 |
+| **🎲 음식 추천** | 선택한 감정과 카테고리에 맞는 음식 랜덤 추천 |
+| **💬 조언 표시** | 음식에 어울리는 마음을 위로하는 한 마디 |
+| **📸 음식 이미지** | Unsplash API로 아름다운 음식 사진 표시 |
+| **🔄 재추천** | 같은 조건으로 다른 음식 재추천 |
 
 ### 🛠️ 기술 스택
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        프론트엔드                            │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
+│  │  Thymeleaf  │    │   HTML5     │    │    CSS3     │     │
+│  └─────────────┘    └─────────────┘    └─────────────┘     │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                         백엔드                                │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
+│  │Spring Boot  │    │Spring       │    │  MyBatis    │     │
+│  │   3.2.5      │    │ Security    │    │             │     │
+│  └─────────────┘    └─────────────┘    └─────────────┘     │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                        데이터베이스                           │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
+│  │ PostgreSQL  │    │   MySQL     │    │  Unsplash   │     │
+│  │    15       │    │   8.0       │    │    API      │     │
+│  └─────────────┘    └─────────────┘    └─────────────┘     │
+│                                              │                │
+│                                              ▼                │
+│                                    ┌─────────────┐           │
+│                                    │  Gemini     │           │
+│                                    │    API      │           │
+│                                    └─────────────┘           │
+└─────────────────────────────────────────────────────────────┘
+```
+
 | 카테고리 | 기술 |
 |---------|------|
-| **백엔드** | Spring Boot 3.x, Spring Security, MyBatis |
-| **프론트엔드** | Thymeleaf, HTML5, CSS3 |
-| **데이터베이스** | MySQL 8.0 |
-| **외부 API** | Unsplash (음식 이미지) |
-| **빌드 도구** | Gradle |
 | **언어** | Java 17 |
+| **프레임워크** | Spring Boot 3.2.5 |
+| **템플릿** | Thymeleaf |
+| **데이터베이스** | PostgreSQL 15 / MySQL 8.0 |
+| **ORM** | MyBatis |
+| **보안** | Spring Security |
+| **빌드 도구** | Gradle 8.x |
+| **외부 API** | Unsplash (음식 이미지), Gemini API (조언 생성) |
+
+### 📊 데이터베이스 구조
+
+- **emotions**: 6가지 감정 마스터
+- **food_categories**: 5가지 음식 카테고리 마스터
+- **foods**: 감정×카테고리 조합 (90~120품)
+- **food_advice_templates**: 조언 템플릿
 
 ### 🚀 설치 방법
 
 #### 전제 조건
 - Java 17 이상
-- MySQL 8.0 이상
+- PostgreSQL 15 이상 또는 MySQL 8.0 이상
 - Gradle 8.x
 
-#### 단계
+#### 설치 단계
 
 1. **저장소 클론**
 ```bash
@@ -298,22 +471,30 @@ git clone https://github.com/AN-ILGWON/Kibunmeshi.git
 cd Kibunmeshi
 ```
 
-2. **데이터베이스 설정**
+2. **데이터베이스 생성**
 ```sql
+-- PostgreSQL의 경우
 CREATE DATABASE kibunmeshi;
+
+-- MySQL의 경우
+CREATE DATABASE kibunmeshi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 3. **application.yml 설정**
 ```yaml
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/kibunmeshi
+    # PostgreSQL의 경우
+    url: jdbc:postgresql://localhost:5432/kibunmeshi
+    # MySQL의 경우
+    # url: jdbc:mysql://localhost:3306/kibunmeshi
     username: your_username
     password: your_password
 ```
 
-4. **Unsplash API 키 발급**
+4. **API 키 발급**
 - [Unsplash Developers](https://unsplash.com/developers)에서 API 키 발급
+- [Google AI Studio](https://makersuite.google.com/app/apikey)에서 Gemini API 키 발급
 - `application.yml`에 설정
 
 5. **애플리케이션 실행**
@@ -324,13 +505,45 @@ spring:
 6. **접속**
 - 브라우저에서 `http://localhost:8080` 접속
 
-### 📄 프로젝트 문서
+### � 화면 흐름
 
+```
+┌─────────────┐
+│  홈 화면    │  기분 선택
+│ (기분 선택) │ ──────────►
+└─────────────┘
+                │
+                ▼
+┌─────────────┐
+│ 카테고리 선택 │  카테고리 선택
+│             │ ──────────►
+└─────────────┘
+                │
+                ▼
+┌─────────────┐
+│ 결과 화면    │  음식 추천 + 조언
+│             │  재추천 / 처음으로
+└─────────────┘
+```
 
-- [요구사항 정의서](./docs/2_kibunmeshi-requirements.md) - 기능 요구사항, 비기능 요구사항
-- [화면 정의서](./docs/3_kibunmeshi-screen-spec.md) - 화면 설계, UI 컴포넌트
-- [데이터베이스 설계서](./docs/4_kibunmeshi-database-spec.md) - ER 다이어그램, 테이블 정의
-- [개발 로그](./docs/6_kibunmeshi-development-log.md) - 개발 일지
-- [환경설정 가이드](./docs/6_환경설정가이드.md) - 설치 안내
+### 🎨 디자인 특징
 
+- **모바일 퍼스트**: 375px~1920px 대응
+- **반응형 디자인**: 모바일, 태블릿, 데스크탑 지원
+- **컬러풀한 UI**: 기분별 다른 색상 사용
+- **간단한 UX**: 2클릭으로 결과 확인
 
+### 🔮 향후 확장 계획
+
+#### Phase 2
+- [ ] SNS 공유 기능 (Twitter/X, LINE)
+- [ ] 레시피 연동 (외부 레시피 사이트 링크)
+
+#### Phase 3
+- [ ] AI 기반 추천 (Gemini API 연동)
+- [ ] 사용자 패턴 학습
+- [ ] 커뮤니티 기능
+
+### 📝 라이선스
+
+MIT License
