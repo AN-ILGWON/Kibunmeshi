@@ -14,9 +14,9 @@ spring:
   # SQL初期化
   sql:
     init:
-      mode: never
-      schema-locations: classpath:schema.sql
-      data-locations: classpath:data.sql
+      mode: ${SPRING_SQL_INIT_MODE:never}
+      schema-locations: classpath:schema-postgresql.sql
+      data-locations: classpath:data-postgresql.sql
   
   # Thymeleaf設定
   thymeleaf:
