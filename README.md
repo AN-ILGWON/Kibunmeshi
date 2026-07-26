@@ -13,7 +13,4 @@
 - Database: MySQL
 - External API: Unsplash (음식 이미지)
 
-## 프로젝트 문서
-- [기존 프로젝트 분석](./docs/existing-projects-analysis.md) - 하나마츠, 칸비, 우마쿠지 분석
-- [기능 설계서](./docs/kibunmeshi-spec.md) - 화면 설계, DB 설계, API 설계
-- [제작 과정](./docs/kibunmeshi-development-log.md) - 개발 일지
+
