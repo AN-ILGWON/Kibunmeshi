@@ -8,7 +8,7 @@ COPY gradle ./gradle
 RUN chmod +x gradlew
 RUN ./gradlew build --no-daemon
 
-COPY build/libs/kibunmeshi.jar app.jar
+COPY build/libs/*.jar app.jar
 
 EXPOSE 8080
 
