@@ -6,10 +6,14 @@ spring:
   
   # データソース設定
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/kibunmeshi}
-    username: ${DATABASE_USERNAME:kibunmeshi_user}
-    password: ${DATABASE_PASSWORD:kibunmeshi_pass}
+    url: ${DATABASE_URL:}
+    username: ${DATABASE_USERNAME:}
+    password: ${DATABASE_PASSWORD:}
     driver-class-name: org.postgresql.Driver
+  # Railway에서 데이터베이스 연결이 없을 경우 자동 설정 비활성화
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   
   # SQL初期化
   sql:
