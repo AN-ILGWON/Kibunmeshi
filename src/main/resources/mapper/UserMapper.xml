@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kibunmeshi.repository.UserMapper">
+
+    <resultMap id="UserResultMap" type="com.kibunmeshi.domain.User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="passwordHash" column="password_hash"/>
+        <result property="nickname" column="nickname"/>
+        <result property="email" column="email"/>
+        <result property="role" column="role"/>
+        <result property="enabled" column="enabled"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="findByUsername" resultMap="UserResultMap">
+        SELECT id, username, password_hash, nickname, email, role, enabled, created_at, updated_at
+        FROM users
+        WHERE username = #{username}
+        LIMIT 1
+    </select>
+
+    <select id="findById" resultMap="UserResultMap">
+        SELECT id, username, password_hash, nickname, email, role, enabled, created_at, updated_at
+        FROM users
+        WHERE id = #{id}
+    </select>
+
+    <select id="countByUsername" resultType="int">
+        SELECT COUNT(*) FROM users WHERE username = #{username}
+    </select>
+
+    <select id="findAll" resultMap="UserResultMap">
+        SELECT id, username, password_hash, nickname, email, role, enabled, created_at, updated_at
+        FROM users
+    </select>
+
+    <select id="countByNickname" resultType="int">
+        SELECT COUNT(*) FROM users WHERE nickname = #{nickname}
+    </select>
+
+    <select id="countByEmail" resultType="int">
+        SELECT COUNT(*) FROM users WHERE email = #{email}
+    </select>
+
+    <insert id="insert" parameterType="com.kibunmeshi.domain.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (username, password_hash, nickname, email, role, enabled)
+        VALUES (#{username}, #{passwordHash}, #{nickname}, #{email}, #{role}, #{enabled})
+    </insert>
+
+</mapper>

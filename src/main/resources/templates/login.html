@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン - きぶんめし</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <a class="logo" th:href="@{/}">
+            <img th:src="@{/images/Kibunmeshi_logo.png}" alt="きぶんめし" class="logo-image">
+        </a>
+        
+        <!-- 感情・食べ物バナー -->
+        <div class="emotion-food-banner">
+            <div class="emotion-food-card happy">
+                <span class="emotion-food-text">嬉しい時にも</span>
+            </div>
+            <div class="emotion-food-card sad">
+                <span class="emotion-food-text">悲しい時にも</span>
+            </div>
+            <div class="emotion-food-card angry">
+                <span class="emotion-food-text">怒った時にも</span>
+            </div>
+            <div class="emotion-food-card tired">
+                <span class="emotion-food-text">疲れた時にも</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="site-main narrow">
+        <h1 class="page-title">ログイン</h1>
+
+        <div class="form-card">
+            <div class="alert alert-success" th:if="${signupSuccess}" th:text="${signupSuccess}">
+                ようこそ！
+            </div>
+            <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}">
+                ログインIDまたはパスワードが正しくありません。
+            </div>
+
+            <form th:action="@{/login}" method="post" class="auth-form">
+                <div class="form-group">
+                    <label for="username" class="form-label">ログインID</label>
+                    <div class="form-input-wrapper">
+                        <span class="form-input-icon">👤</span>
+                        <input type="text" id="username" name="username" class="form-input"
+                               autocomplete="username" required autofocus
+                               placeholder="例: tanaka_123">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">パスワード</label>
+                    <div class="form-input-wrapper">
+                        <span class="form-input-icon">🔒</span>
+                        <input type="password" id="password" name="password" class="form-input"
+                               autocomplete="current-password" required
+                               placeholder="4文字以上">
+                    </div>
+                </div>
+                <div class="form-submit-wrapper">
+                    <button type="submit" class="btn btn-primary">ログイン</button>
+                </div>
+            </form>
+
+            <p class="auth-link-text">アカウントをお持ちでない方は <a th:href="@{/signup}" class="auth-link">会員登録 →</a></p>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 きぶんめし (Kibunmeshi)</p>
+    </footer>
+</body>
+</html>

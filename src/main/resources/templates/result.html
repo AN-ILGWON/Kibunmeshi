@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>あなたへのおすすめ - きぶんめし</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body>
+    <!-- Impact Food Reveal Entrance Animation Overlay -->
+    <div id="food-reveal-overlay" class="food-reveal-overlay">
+        <div class="food-reveal-spotlight"></div>
+        <div class="food-reveal-image-container">
+            <img class="food-reveal-image"
+                 th:src="${imageUrl}"
+                 th:alt="${food.name}"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400';">
+            <h2 class="food-reveal-title" th:text="${food.name}">サムゲタン</h2>
+        </div>
+    </div>
+
+    <header class="site-header">
+        <a class="logo" th:href="@{/}">
+            <img th:src="@{/images/Kibunmeshi_logo.png}" alt="きぶんめし" class="logo-image">
+        </a>
+        
+        <!-- 感情・食べ物バナー -->
+        <div class="emotion-food-banner">
+            <div class="emotion-food-card happy">
+                <span class="emotion-food-text">嬉しい時にも</span>
+            </div>
+            <div class="emotion-food-card sad">
+                <span class="emotion-food-text">悲しい時にも</span>
+            </div>
+            <div class="emotion-food-card angry">
+                <span class="emotion-food-text">怒った時にも</span>
+            </div>
+            <div class="emotion-food-card tired">
+                <span class="emotion-food-text">疲れた時にも</span>
+            </div>
+        </div>
+        
+        <nav class="site-nav">
+            <a th:href="@{/mypage}" sec:authorize="isAuthenticated()" class="nav-link">📔 マイページ</a>
+            <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="nav-link">ログイン</a>
+        </nav>
+    </header>
+
+    <main class="site-main" style="max-width: 600px; margin: 0 auto; padding: 20px 16px;">
+        <p class="result-subtitle" style="text-align: center; margin-bottom: 20px; font-weight: 800; font-size: 18px; color: var(--color-primary);">✨ 本日の運命のめしカード ✨</p>
+
+        <!-- Pokemon TCG Style Card -->
+        <article class="pokemon-tcg-card">
+            <!-- TCG Header -->
+            <div class="tcg-header">
+                <div class="tcg-title-group">
+                    <span class="tcg-stage">たね</span>
+                    <h2 class="tcg-name" th:text="${food.name}">サムゲタン</h2>
+                </div>
+                <div class="tcg-hp-group">
+                    <span class="tcg-hp-label">HP</span>
+                    <span class="tcg-hp-value">200</span>
+                    <span class="tcg-type-icon" th:text="${category.icon}">🥘</span>
+                </div>
+            </div>
+
+            <!-- TCG Main Image Frame -->
+            <div class="tcg-image-frame">
+                <img class="tcg-image"
+                     th:src="${imageUrl}"
+                     th:alt="${food.name}"
+                     onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600';">
+                <span class="tcg-rarity-badge">SSR ✦ EX</span>
+            </div>
+
+            <!-- TCG Moves / Stats Box -->
+            <div class="tcg-moves-box">
+                <!-- Move 1: Description -->
+                <div class="tcg-move-item" th:if="${food.description}">
+                    <div class="tcg-move-header">
+                        <span class="tcg-move-tag">
+                            <span th:text="${emotion.emoji}">😊</span>
+                            <span>料理の特色</span>
+                        </span>
+                        <span class="tcg-move-damage">80+</span>
+                    </div>
+                    <p class="tcg-move-desc" th:text="${food.description}">体を温める滋養強壮スープ。</p>
+                </div>
+
+                <!-- Move 2: Effect -->
+                <div class="tcg-move-item" th:if="${food.effect}">
+                    <div class="tcg-move-header">
+                        <span class="tcg-move-tag">
+                            <span>⚡</span>
+                            <span>栄養成分・効果</span>
+                        </span>
+                        <span class="tcg-move-damage">150</span>
+                    </div>
+                    <p class="tcg-move-desc" th:text="${food.effect}">高麗人参のサポニン成分が疲労回復を助けます。</p>
+                </div>
+
+                <!-- Chef's Advice -->
+                <div class="tcg-move-item" th:if="${advice}">
+                    <div class="tcg-move-header">
+                        <span class="tcg-move-tag" style="background: #fef3c7; color: #92400e; border-color: #f59e0b;">
+                            <span>💬</span>
+                            <span>AIシェフの一言</span>
+                        </span>
+                    </div>
+                    <p class="tcg-move-desc" style="font-style: italic; color: #b45309;" th:text="${advice}">"今日の気分に合った料理です。"</p>
+                </div>
+            </div>
+
+            <!-- TCG Card Footer -->
+            <div class="tcg-footer">
+                <div class="tcg-footer-left">
+                    <span th:text="|感情: ${emotion.label}|">気分: うれしい</span>
+                    <span>•</span>
+                    <span th:text="|分類: ${category.label}|">ジャンル: 韓国料理</span>
+                </div>
+                <div>033/108 RR ✦ kibunmeshi</div>
+            </div>
+        </article>
+
+        <!-- Notification Messages -->
+        <div class="alert alert-success" th:if="${savedToCard}" style="margin-bottom: 20px;">
+            📔 マイページにカードとして保存しました！
+            <a th:href="@{/mypage}" class="alert-link">マイページを見る →</a>
+        </div>
+        <div class="alert alert-info" th:if="${isLoggedIn == null or !isLoggedIn}" style="margin-bottom: 20px;">
+            💡 ログインすると、結果をカードとしてマイページに保存できます。
+            <a th:href="@{/login}" class="alert-link">ログイン →</a>
+        </div>
+
+        <!-- Horizontal Action Buttons Bar -->
+        <div class="action-buttons">
+            <a class="btn btn-primary"
+               th:href="@{/result(emotion=${emotion.id}, category=${category.id}, exclude=${food.id}, reroll=1)}">
+                🔄 もう一度ガチャ
+            </a>
+            <form th:if="${savedHistoryId != null}" th:action="@{/mypage/public}" method="post" style="display: inline;">
+                <input type="hidden" name="historyId" th:value="${savedHistoryId}">
+                <input type="hidden" name="isPublic" value="true">
+                <input type="hidden" name="redirect" th:value="@{/}">
+                <button type="submit" class="btn btn-secondary">🌍 カードを公開</button>
+            </form>
+            <a th:if="${savedHistoryId != null}" class="btn btn-secondary" th:href="@{/mypage}">📔 マイページ</a>
+            <a class="btn btn-secondary" th:href="@{/}">🏠 最初から</a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 きぶんめし (Kibunmeshi) - 今日の気分にぴったりのごはんを</p>
+    </footer>
+</body>
+</html>

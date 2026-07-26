@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    FoodMapper.xml
+    
+    料理（Food）データアクセス用MyBatisマッパーXML
+    
+    このファイルは、FoodMapperインターフェースで定義されたメソッドの
+    SQLクエリを提供する。気分とカテゴリに基づいた料理検索、
+    ランダム推薦などの機能をサポートする。
+    
+    @author 作者名
+    @version 1.0.0
+    @see com.kibunmeshi.repository.FoodMapper
+-->
+<mapper namespace="com.kibunmeshi.repository.FoodMapper">
+
+    <!--
+        ========================================
+        ResultMap定義
+        ========================================
+    -->
+    
+    <!--
+        基本のFood結果マッピング
+        
+        foodsテーブルのカラムをFoodエンティティのフィールドにマッピングする。
+        データベースのスネークケース（is_active）をJavaのキャメルケース（isActive）
+        に自動変換する（application.ymlのmap-underscore-to-camel-case設定）。
+    -->
+    <resultMap id="FoodResultMap" type="com.kibunmeshi.domain.Food">
+        <id property="id" column="f_id"/>
+        <result property="name" column="f_name"/>
+        <result property="emotionId" column="f_emotion_id"/>
+        <result property="categoryId" column="f_category_id"/>
+        <result property="description" column="f_description"/>
+        <result property="effect" column="f_effect"/>
+        <result property="rarity" column="f_rarity"/>
+        <result property="adviceType" column="f_advice_type"/>
+        <result property="imageKeyword" column="f_image_keyword"/>
+        <result property="imageUrl" column="f_image_url"/>
+        <result property="isActive" column="f_is_active"/>
+        <result property="createdAt" column="f_created_at"/>
+        <result property="updatedAt" column="f_updated_at"/>
+        
+        <!-- 関連エンティティ: Emotion -->
+        <association property="emotion" resultMap="EmotionResultMap"/>
+        
+        <!-- 関連エンティティ: FoodCategory -->
+        <association property="category" resultMap="CategoryResultMap"/>
+    </resultMap>
+    
+    <!--
+        Emotion結果マッピング（サブマップ）
+        
+        FoodとJOINして取得するEmotionデータのマッピング。
+        カラム名の競合を避けるため、別名（e_）を使用する。
+    -->
+    <resultMap id="EmotionResultMap" type="com.kibunmeshi.domain.Emotion">
+        <id property="id" column="e_id"/>
+        <result property="name" column="e_name"/>
+        <result property="label" column="e_label"/>
+        <result property="emoji" column="e_emoji"/>
+        <result property="colorCode" column="e_color_code"/>
+    </resultMap>
+    
+    <!--
+        FoodCategory結果マッピング（サブマップ）
+        
+        FoodとJOINして取得するFoodCategoryデータのマッピング。
+        カラム名の競合を避けるため、別名（c_）を使用する。
+    -->
+    <resultMap id="CategoryResultMap" type="com.kibunmeshi.domain.FoodCategory">
+        <id property="id" column="c_id"/>
+        <result property="name" column="c_name"/>
+        <result property="label" column="c_label"/>
+        <result property="icon" column="c_icon"/>
+    </resultMap>
+
+    <!--
+        ========================================
+        SELECTクエリ
+        ========================================
+    -->
+
+    <!--
+        指定された気分IDとカテゴリIDに該当する料理を取得する
+        
+        FoodMapper.findByEmotionAndCategory() に対応するSQL。
+        推薦機能で使用され、ユーザーの選択に基づいて候補料理を検索する。
+        
+        クエリ特性:
+        - WHERE句でemotion_idとcategory_idを完全一致検索
+        - is_active=trueのみを対象とし、無効データを除外
+        - 関連テーブル（emotions, food_categories）とJOINして詳細情報を取得
+        - 結果はランダムではなく、id順にソート（アプリケーション側でランダム選択）
+        
+        パフォーマンス:
+        - idx_emotion_category複合インデックスを使用
+        - 実行計画でtype=ref、key_len=8（INT×2）を想定
+        
+        SQL動作:
+        1. foodsテーブルからemotion_idとcategory_idが一致する行を検索
+        2. is_active=1の行のみを抽出
+        3. emotionsテーブルとJOINして気分情報を取得
+        4. food_categoriesテーブルとJOINしてカテゴリ情報を取得
+        5. 指定されたカラムのみを選択し、結果セットを返す
+        
+        @param emotionId 気分ID（1-6）
+        @param categoryId カテゴリID（1-5）
+        @return 条件に該当する料理リスト。該当なしの場合は空リスト
+    -->
+    <select id="findByEmotionAndCategory" resultMap="FoodResultMap">
+        SELECT
+            -- foodsテーブル（f_プレフィックス）
+            f.id AS f_id,
+            f.name AS f_name,
+            f.emotion_id AS f_emotion_id,
+            f.category_id AS f_category_id,
+            f.description AS f_description,
+            f.effect AS f_effect,
+            f.rarity AS f_rarity,
+            f.advice_type AS f_advice_type,
+            f.image_keyword AS f_image_keyword,
+            f.image_url AS f_image_url,
+            f.is_active AS f_is_active,
+            f.created_at AS f_created_at,
+            f.updated_at AS f_updated_at,
+            
+            -- emotionsテーブル（e_プレフィックス）
+            e.id AS e_id,
+            e.name AS e_name,
+            e.label AS e_label,
+            e.emoji AS e_emoji,
+            e.color_code AS e_color_code,
+            
+            -- food_categoriesテーブル（c_プレフィックス）
+            c.id AS c_id,
+            c.name AS c_name,
+            c.label AS c_label,
+            c.icon AS c_icon
+            
+        FROM foods f
+        INNER JOIN emotions e ON f.emotion_id = e.id
+        INNER JOIN food_categories c ON f.category_id = c.id
+        WHERE f.emotion_id = #{emotionId}
+          AND f.category_id = #{categoryId}
+          AND f.is_active = TRUE
+        ORDER BY f.id ASC
+    </select>
+
+    <!--
+        指定されたIDの料理を取得する
+        
+        FoodMapper.selectById() に対応するSQL。
+        料理詳細表示や推薦履歴からの再表示で使用される。
+        
+        クエリ特性:
+        - 主キー（id）による完全一致検索
+        - 1件または0件を返す
+        - 関連テーブルとJOINして詳細情報を取得
+        
+        パフォーマンス:
+        - PRIMARY KEYインデックスを使用
+        - 実行計画でtype=constを想定（定数検索）
+        
+        @param id 料理ID
+        @return 該当する料理エンティティ。存在しない場合はnull
+    -->
+    <select id="selectById" resultMap="FoodResultMap">
+        SELECT
+            -- foodsテーブル
+            f.id AS f_id,
+            f.name AS f_name,
+            f.emotion_id AS f_emotion_id,
+            f.category_id AS f_category_id,
+            f.description AS f_description,
+            f.effect AS f_effect,
+            f.rarity AS f_rarity,
+            f.advice_type AS f_advice_type,
+            f.image_keyword AS f_image_keyword,
+            f.image_url AS f_image_url,
+            f.is_active AS f_is_active,
+            f.created_at AS f_created_at,
+            f.updated_at AS f_updated_at,
+            
+            -- emotionsテーブル
+            e.id AS e_id,
+            e.name AS e_name,
+            e.label AS e_label,
+            e.emoji AS e_emoji,
+            e.color_code AS e_color_code,
+            
+            -- food_categoriesテーブル
+            c.id AS c_id,
+            c.name AS c_name,
+            c.label AS c_label,
+            c.icon AS c_icon
+            
+        FROM foods f
+        INNER JOIN emotions e ON f.emotion_id = e.id
+        INNER JOIN food_categories c ON f.category_id = c.id
+        WHERE f.id = #{id}
+    </select>
+
+    <!--
+        全ての料理を取得する
+        
+        FoodMapper.selectAll() に対応するSQL。
+        管理機能での一覧表示やデータベースのバックアップなどで使用される。
+        
+        クエリ特性:
+        - 全件検索（条件なし）
+        - id順にソート
+        - 大量データの場合はメモリ使用量に注意
+        
+        パフォーマンス:
+        - フルテーブルスキャンが発生
+        - 大量データ時はページネーションを検討
+        
+        @return 全料理のリスト。データがない場合は空リスト
+    -->
+    <select id="selectAll" resultMap="FoodResultMap">
+        SELECT
+            -- foodsテーブル
+            f.id AS f_id,
+            f.name AS f_name,
+            f.emotion_id AS f_emotion_id,
+            f.category_id AS f_category_id,
+            f.description AS f_description,
+            f.effect AS f_effect,
+            f.rarity AS f_rarity,
+            f.advice_type AS f_advice_type,
+            f.image_keyword AS f_image_keyword,
+            f.image_url AS f_image_url,
+            f.is_active AS f_is_active,
+            f.created_at AS f_created_at,
+            f.updated_at AS f_updated_at,
+            
+            -- emotionsテーブル
+            e.id AS e_id,
+            e.name AS e_name,
+            e.label AS e_label,
+            e.emoji AS e_emoji,
+            e.color_code AS e_color_code,
+            
+            -- food_categoriesテーブル
+            c.id AS c_id,
+            c.name AS c_name,
+            c.label AS c_label,
+            c.icon AS c_icon
+            
+        FROM foods f
+        INNER JOIN emotions e ON f.emotion_id = e.id
+        INNER JOIN food_categories c ON f.category_id = c.id
+        ORDER BY f.id ASC
+    </select>
+
+    <insert id="insert" parameterType="com.kibunmeshi.domain.Food" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO foods (
+            name, emotion_id, category_id, description, effect, rarity,
+            advice_type, image_keyword, image_url, is_active
+        ) VALUES (
+            #{name}, #{emotionId}, #{categoryId}, #{description}, #{effect}, #{rarity},
+            #{adviceType}, #{imageKeyword}, #{imageUrl}, #{isActive}
+        )
+    </insert>
+
+</mapper>

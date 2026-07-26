@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>きぶんめし - 思考中...</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #E85D04 0%, #DC2F02 100%);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loading-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 70%, rgba(255, 183, 3, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: bgMove 10s ease-in-out infinite;
+        }
+        
+        @keyframes bgMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, -20px); }
+        }
+        
+        .loading-content {
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Circular Robot Loader */
+        .robot-loader {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 32px;
+        }
+        
+        .robot-head {
+            position: absolute;
+            width: 80px;
+            height: 70px;
+            background: white;
+            border-radius: 20px 20px 15px 15px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: robotBob 2s ease-in-out infinite;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes robotBob {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-10px); }
+        }
+        
+        .robot-eyes {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+        }
+        
+        .robot-eye {
+            width: 16px;
+            height: 16px;
+            background: #E85D04;
+            border-radius: 50%;
+            animation: blink 3s ease-in-out infinite;
+        }
+        
+        @keyframes blink {
+            0%, 45%, 55%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.1); }
+        }
+        
+        .robot-antenna {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 15px;
+            background: #FFB703;
+            border-radius: 2px;
+        }
+        
+        .robot-antenna::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: #FFB703;
+            border-radius: 50%;
+            animation: glow 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px #FFB703; }
+            50% { box-shadow: 0 0 20px #FFB703, 0 0 30px #FFB703; }
+        }
+        
+        .robot-mouth {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 10px;
+            background: #E85D04;
+            border-radius: 0 0 20px 20px;
+            animation: talk 0.5s ease-in-out infinite;
+        }
+        
+        @keyframes talk {
+            0%, 100% { height: 10px; }
+            50% { height: 5px; }
+        }
+        
+        /* Circular Spinner */
+        .spinner-ring {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .spinner-ring:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 10px;
+            left: 10px;
+            border: 3px solid rgba(255, 183, 3, 0.3);
+            border-top: 3px solid #FFB703;
+            animation: spin 1.5s linear infinite reverse;
+        }
+        
+        .loading-text {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .loading-subtext {
+            font-size: 16px;
+            opacity: 0.95;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+        
+        .cooking-items {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+        
+        .cooking-item {
+            font-size: 32px;
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        .cooking-item:nth-child(1) { animation-delay: 0s; }
+        .cooking-item:nth-child(2) { animation-delay: 0.3s; }
+        .cooking-item:nth-child(3) { animation-delay: 0.6s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="loading-content">
+            <div class="robot-loader">
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+                <div class="robot-head">
+                    <div class="robot-antenna"></div>
+                    <div class="robot-eyes">
+                        <div class="robot-eye"></div>
+                        <div class="robot-eye"></div>
+                    </div>
+                    <div class="robot-mouth"></div>
+                </div>
+            </div>
+            <h1 class="loading-text">きぶんめし</h1>
+            <p class="loading-subtext">AIシェフが料理を考えています...</p>
+            <div class="cooking-items">
+                <span class="cooking-item">🍳</span>
+                <span class="cooking-item">🥘</span>
+                <span class="cooking-item">🍜</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 2초 후 결과 화면으로 리다이렉트
+        setTimeout(function() {
+            const emotion = new URLSearchParams(window.location.search).get('emotion');
+            const category = new URLSearchParams(window.location.search).get('category');
+            const exclude = new URLSearchParams(window.location.search).get('exclude');
+            
+            let resultUrl = '/result?emotion=' + emotion + '&category=' + category;
+            if (exclude) {
+                resultUrl += '&exclude=' + exclude;
+            }
+            window.location.href = resultUrl;
+        }, 2000);
+    </script>
+</body>
+</html>

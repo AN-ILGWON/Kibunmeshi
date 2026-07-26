@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>結果なし - きぶんめし</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <a class="logo" th:href="@{/}">
+            <span class="logo-ja">きぶんめし</span>
+            <span class="logo-sub">Kibunmeshi</span>
+        </a>
+        
+        <!-- 感情・食べ物バナー -->
+        <div class="emotion-food-banner">
+            <div class="emotion-food-card happy">
+                <span class="emotion-food-text">嬉しい時にも</span>
+            </div>
+            <div class="emotion-food-card sad">
+                <span class="emotion-food-text">悲しい時にも</span>
+            </div>
+            <div class="emotion-food-card angry">
+                <span class="emotion-food-text">怒った時にも</span>
+            </div>
+            <div class="emotion-food-card tired">
+                <span class="emotion-food-text">疲れた時にも</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="site-main">
+        <h1 class="page-title">😢</h1>
+        <p class="empty-message" th:text="${errorMessage}">条件に合う料理が見つかりませんでした。</p>
+        <div class="action-buttons">
+            <a class="btn btn-primary" th:href="@{/}">最初から</a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 きぶんめし (Kibunmeshi) - 今日の気分にぴったりのごはんを</p>
+    </footer>
+</body>
+</html>

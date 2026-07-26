@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会員登録 - きぶんめし</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <a class="logo" th:href="@{/}">
+            <span class="logo-ja">きぶんめし</span>
+            <span class="logo-sub">Kibunmeshi</span>
+        </a>
+        
+        <!-- 感情・食べ物バナー -->
+        <div class="emotion-food-banner">
+            <div class="emotion-food-card happy">
+                <span class="emotion-food-text">嬉しい時にも</span>
+            </div>
+            <div class="emotion-food-card sad">
+                <span class="emotion-food-text">悲しい時にも</span>
+            </div>
+            <div class="emotion-food-card angry">
+                <span class="emotion-food-text">怒った時にも</span>
+            </div>
+            <div class="emotion-food-card tired">
+                <span class="emotion-food-text">疲れた時にも</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="site-main narrow">
+        <h1 class="page-title">会員登録</h1>
+
+        <div class="form-card">
+            <div class="alert alert-error" th:if="${signupError}" th:text="${signupError}">
+                エラーメッセージ
+            </div>
+
+            <form th:action="@{/signup}" method="post" class="auth-form" id="signupForm">
+                <div class="form-group">
+                    <label for="username" class="form-label">ログインID <span class="required">*</span></label>
+                    <div class="input-with-button">
+                        <div class="form-input-wrapper">
+                            <span class="form-input-icon">👤</span>
+                            <input type="text" id="username" name="username" class="form-input"
+                                   th:value="${username}"
+                                   autocomplete="username" required
+                                   pattern="[a-zA-Z0-9_]{3,30}"
+                                   placeholder="半角英数 3〜30文字">
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="checkUsername()">重複確認</button>
+                    </div>
+                    <div id="usernameCheckMessage" class="check-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">パスワード <span class="required">*</span></label>
+                    <div class="form-input-wrapper">
+                        <span class="form-input-icon">🔒</span>
+                        <input type="password" id="password" name="password" class="form-input"
+                               autocomplete="new-password" required minlength="6"
+                               placeholder="6文字以上">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="passwordConfirm" class="form-label">パスワード（確認） <span class="required">*</span></label>
+                    <div class="form-input-wrapper">
+                        <span class="form-input-icon">🔑</span>
+                        <input type="password" id="passwordConfirm" name="passwordConfirm" class="form-input"
+                               autocomplete="new-password" required minlength="6"
+                               placeholder="もう一度入力してください">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nickname" class="form-label">ニックネーム <span class="required">*</span></label>
+                    <div class="input-with-button">
+                        <div class="form-input-wrapper">
+                            <span class="form-input-icon">✏️</span>
+                            <input type="text" id="nickname" name="nickname" class="form-input"
+                                   th:value="${nickname}"
+                                   autocomplete="nickname" required maxlength="30"
+                                   placeholder="表示名（1〜30文字）">
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="checkNickname()">重複確認</button>
+                    </div>
+                    <div id="nicknameCheckMessage" class="check-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="form-label">メールアドレス <span class="required">*</span></label>
+                    <div class="form-input-wrapper">
+                        <span class="form-input-icon">📧</span>
+                        <input type="email" id="email" name="email" class="form-input"
+                               th:value="${email}"
+                               autocomplete="email" required maxlength="100"
+                               placeholder="例: tanaka@example.com">
+                    </div>
+                </div>
+                <div class="form-submit-wrapper">
+                    <button type="submit" class="btn btn-primary">登録する</button>
+                </div>
+            </form>
+
+            <p class="auth-link-text">すでにアカウントをお持ちの方は <a th:href="@{/login}" class="auth-link">ログイン →</a></p>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 きぶんめし (Kibunmeshi)</p>
+    </footer>
+
+    <script>
+        let usernameAvailable = false;
+        let nicknameAvailable = false;
+
+        function checkUsername() {
+            const username = document.getElementById('username').value;
+            if (!username) {
+                showMessage('usernameCheckMessage', 'ログインIDを入力してください。', 'error');
+                return;
+            }
+
+            fetch(`/api/check-username?username=${encodeURIComponent(username)}`)
+                .then(response => response.json())
+                .then(data => {
+                    showMessage('usernameCheckMessage', data.message, data.available ? 'success' : 'error');
+                    usernameAvailable = data.available;
+                })
+                .catch(error => {
+                    showMessage('usernameCheckMessage', '重複確認中にエラーが発生しました。', 'error');
+                });
+        }
+
+        function checkNickname() {
+            const nickname = document.getElementById('nickname').value;
+            if (!nickname) {
+                showMessage('nicknameCheckMessage', 'ニックネームを入力してください。', 'error');
+                return;
+            }
+
+            fetch(`/api/check-nickname?nickname=${encodeURIComponent(nickname)}`)
+                .then(response => response.json())
+                .then(data => {
+                    showMessage('nicknameCheckMessage', data.message, data.available ? 'success' : 'error');
+                    nicknameAvailable = data.available;
+                })
+                .catch(error => {
+                    showMessage('nicknameCheckMessage', '重複確認中にエラーが発生しました。', 'error');
+                });
+        }
+
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = 'check-message ' + type;
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            if (!usernameAvailable) {
+                e.preventDefault();
+                showMessage('usernameCheckMessage', 'ログインIDの重複確認を行ってください。', 'error');
+            }
+            if (!nicknameAvailable) {
+                e.preventDefault();
+                showMessage('nicknameCheckMessage', 'ニックネームの重複確認を行ってください。', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

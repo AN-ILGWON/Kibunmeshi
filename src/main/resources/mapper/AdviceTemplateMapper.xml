@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kibunmeshi.repository.AdviceTemplateMapper">
+
+    <resultMap id="AdviceTemplateResultMap" type="com.kibunmeshi.domain.AdviceTemplate">
+        <id property="id" column="id"/>
+        <result property="emotionId" column="emotion_id"/>
+        <result property="adviceType" column="advice_type"/>
+        <result property="templateJa" column="template_ja"/>
+        <result property="templateKo" column="template_ko"/>
+        <result property="geminiPrompt" column="gemini_prompt"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!--
+        気分×アドバイスタイプでテンプレート候補を取得する
+        該当なしで空リストが返る場合は、Service層でフォールバック検索（emotion_idのみ、汎用）を行う。
+    -->
+    <select id="findByEmotionAndType" resultMap="AdviceTemplateResultMap">
+        SELECT id, emotion_id, advice_type, template_ja, template_ko, gemini_prompt, is_active, created_at
+        FROM food_advice_templates
+        WHERE is_active = TRUE
+          AND emotion_id = #{emotionId}
+          AND advice_type = #{adviceType}
+        ORDER BY id ASC
+    </select>
+
+    <select id="findByEmotion" resultMap="AdviceTemplateResultMap">
+        SELECT id, emotion_id, advice_type, template_ja, template_ko, gemini_prompt, is_active, created_at
+        FROM food_advice_templates
+        WHERE is_active = TRUE
+          AND emotion_id = #{emotionId}
+        ORDER BY id ASC
+    </select>
+
+    <select id="findGeneral" resultMap="AdviceTemplateResultMap">
+        SELECT id, emotion_id, advice_type, template_ja, template_ko, gemini_prompt, is_active, created_at
+        FROM food_advice_templates
+        WHERE is_active = TRUE
+          AND emotion_id IS NULL
+        ORDER BY id ASC
+    </select>
+
+</mapper>

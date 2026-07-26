@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kibunmeshi.repository.HistoryMapper">
+
+    <!-- 履歴 + 関連エンティティをまとめて取得 -->
+    <resultMap id="HistoryWithDetailsResultMap" type="com.kibunmeshi.domain.RecommendationHistory">
+        <id property="id" column="h_id"/>
+        <result property="userId" column="h_user_id"/>
+        <result property="foodId" column="h_food_id"/>
+        <result property="emotionId" column="h_emotion_id"/>
+        <result property="categoryId" column="h_category_id"/>
+        <result property="adviceText" column="h_advice_text"/>
+        <result property="isFavorite" column="h_is_favorite"/>
+        <result property="isPublic" column="h_is_public"/>
+        <result property="createdAt" column="h_created_at"/>
+
+        <!-- 関連エンティティ：Food -->
+        <association property="food" resultMap="FoodInlineResultMap"/>
+
+        <!-- 関連エンティティ：Emotion -->
+        <association property="emotion" resultMap="EmotionInlineResultMap"/>
+
+        <!-- 関連エンティティ：Category -->
+        <association property="category" resultMap="CategoryInlineResultMap"/>
+    </resultMap>
+
+    <resultMap id="FoodInlineResultMap" type="com.kibunmeshi.domain.Food">
+        <id property="id" column="f_id"/>
+        <result property="name" column="f_name"/>
+        <result property="emotionId" column="f_emotion_id"/>
+        <result property="categoryId" column="f_category_id"/>
+        <result property="description" column="f_description"/>
+        <result property="adviceType" column="f_advice_type"/>
+        <result property="imageKeyword" column="f_image_keyword"/>
+        <result property="imageUrl" column="f_image_url"/>
+        <result property="effect" column="f_effect"/>
+        <result property="rarity" column="f_rarity"/>
+        <result property="isActive" column="f_is_active"/>
+    </resultMap>
+
+    <resultMap id="EmotionInlineResultMap" type="com.kibunmeshi.domain.Emotion">
+        <id property="id" column="e_id"/>
+        <result property="name" column="e_name"/>
+        <result property="label" column="e_label"/>
+        <result property="emoji" column="e_emoji"/>
+        <result property="colorCode" column="e_color_code"/>
+    </resultMap>
+
+    <resultMap id="CategoryInlineResultMap" type="com.kibunmeshi.domain.FoodCategory">
+        <id property="id" column="c_id"/>
+        <result property="name" column="c_name"/>
+        <result property="label" column="c_label"/>
+        <result property="icon" column="c_icon"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.kibunmeshi.domain.RecommendationHistory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO recommendation_histories (user_id, food_id, emotion_id, category_id, advice_text, is_favorite, is_public)
+        VALUES (#{userId}, #{foodId}, #{emotionId}, #{categoryId}, #{adviceText}, #{isFavorite}, #{isPublic})
+    </insert>
+
+    <select id="findByUserId" resultMap="HistoryWithDetailsResultMap">
+        SELECT
+            h.id AS h_id, h.user_id AS h_user_id, h.food_id AS h_food_id,
+            h.emotion_id AS h_emotion_id, h.category_id AS h_category_id,
+            h.advice_text AS h_advice_text, h.is_favorite AS h_is_favorite, h.is_public AS h_is_public,
+            h.created_at AS h_created_at,
+
+            f.id AS f_id, f.name AS f_name, f.emotion_id AS f_emotion_id, f.category_id AS f_category_id,
+            f.description AS f_description, f.advice_type AS f_advice_type, f.image_keyword AS f_image_keyword,
+            f.image_url AS f_image_url,
+            f.effect AS f_effect, f.rarity AS f_rarity, f.is_active AS f_is_active,
+
+            e.id AS e_id, e.name AS e_name, e.label AS e_label, e.emoji AS e_emoji, e.color_code AS e_color_code,
+            c.id AS c_id, c.name AS c_name, c.label AS c_label, c.icon AS c_icon
+
+        FROM recommendation_histories h
+        INNER JOIN foods f ON h.food_id = f.id
+        INNER JOIN emotions e ON h.emotion_id = e.id
+        INNER JOIN food_categories c ON h.category_id = c.id
+        WHERE h.user_id = #{userId}
+        ORDER BY h.created_at DESC
+    </select>
+
+    <select id="findByUserIdAndFavorite" resultMap="HistoryWithDetailsResultMap">
+        SELECT
+            h.id AS h_id, h.user_id AS h_user_id, h.food_id AS h_food_id,
+            h.emotion_id AS h_emotion_id, h.category_id AS h_category_id,
+            h.advice_text AS h_advice_text, h.is_favorite AS h_is_favorite, h.is_public AS h_is_public,
+            h.created_at AS h_created_at,
+
+            f.id AS f_id, f.name AS f_name, f.emotion_id AS f_emotion_id, f.category_id AS f_category_id,
+            f.description AS f_description, f.advice_type AS f_advice_type, f.image_keyword AS f_image_keyword,
+            f.image_url AS f_image_url,
+            f.effect AS f_effect, f.rarity AS f_rarity, f.is_active AS f_is_active,
+
+            e.id AS e_id, e.name AS e_name, e.label AS e_label, e.emoji AS e_emoji, e.color_code AS e_color_code,
+            c.id AS c_id, c.name AS c_name, c.label AS c_label, c.icon AS c_icon
+
+        FROM recommendation_histories h
+        INNER JOIN foods f ON h.food_id = f.id
+        INNER JOIN emotions e ON h.emotion_id = e.id
+        INNER JOIN food_categories c ON h.category_id = c.id
+        WHERE h.user_id = #{userId} AND h.is_favorite = #{isFavorite}
+        ORDER BY h.created_at DESC
+    </select>
+
+    <update id="updateFavorite">
+        UPDATE recommendation_histories
+        SET is_favorite = #{isFavorite}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updatePublic">
+        UPDATE recommendation_histories
+        SET is_public = #{isPublic}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findPublicCards" resultMap="HistoryWithDetailsResultMap">
+        SELECT
+            h.id AS h_id, h.user_id AS h_user_id, h.food_id AS h_food_id,
+            h.emotion_id AS h_emotion_id, h.category_id AS h_category_id,
+            h.advice_text AS h_advice_text, h.is_favorite AS h_is_favorite, h.is_public AS h_is_public,
+            h.created_at AS h_created_at,
+
+            f.id AS f_id, f.name AS f_name, f.emotion_id AS f_emotion_id, f.category_id AS f_category_id,
+            f.description AS f_description, f.advice_type AS f_advice_type, f.image_keyword AS f_image_keyword,
+            f.image_url AS f_image_url,
+            f.effect AS f_effect, f.rarity AS f_rarity, f.is_active AS f_is_active,
+
+            e.id AS e_id, e.name AS e_name, e.label AS e_label, e.emoji AS e_emoji, e.color_code AS e_color_code,
+            c.id AS c_id, c.name AS c_name, c.label AS c_label, c.icon AS c_icon
+
+        FROM recommendation_histories h
+        INNER JOIN foods f ON h.food_id = f.id
+        INNER JOIN emotions e ON h.emotion_id = e.id
+        INNER JOIN food_categories c ON h.category_id = c.id
+        WHERE h.is_public = TRUE
+        ORDER BY h.created_at DESC
+        LIMIT 20
+    </select>
+
+    <select id="findById" resultMap="HistoryWithDetailsResultMap">
+        SELECT
+            h.id AS h_id, h.user_id AS h_user_id, h.food_id AS h_food_id,
+            h.emotion_id AS h_emotion_id, h.category_id AS h_category_id,
+            h.advice_text AS h_advice_text, h.is_favorite AS h_is_favorite, h.is_public AS h_is_public,
+            h.created_at AS h_created_at,
+
+            f.id AS f_id, f.name AS f_name, f.emotion_id AS f_emotion_id, f.category_id AS f_category_id,
+            f.description AS f_description, f.advice_type AS f_advice_type, f.image_keyword AS f_image_keyword,
+            f.image_url AS f_image_url,
+            f.effect AS f_effect, f.rarity AS f_rarity, f.is_active AS f_is_active,
+
+            e.id AS e_id, e.name AS e_name, e.label AS e_label, e.emoji AS e_emoji, e.color_code AS e_color_code,
+            c.id AS c_id, c.name AS c_name, c.label AS c_label, c.icon AS c_icon
+
+        FROM recommendation_histories h
+        INNER JOIN foods f ON h.food_id = f.id
+        INNER JOIN emotions e ON h.emotion_id = e.id
+        INNER JOIN food_categories c ON h.category_id = c.id
+        WHERE h.id = #{id}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM recommendation_histories
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

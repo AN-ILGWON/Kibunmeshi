@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>きぶんめし</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="logo" th:href="@{/}">
+            <img th:src="@{/images/Kibunmeshi_logo.png}" alt="きぶんめし" class="logo-image">
+        </a>
+        
+        <!-- 感情・食べ物バナー -->
+        <div class="emotion-food-banner">
+            <div class="emotion-food-card happy">
+                <span class="emotion-food-text">嬉しい時にも</span>
+            </div>
+            <div class="emotion-food-card sad">
+                <span class="emotion-food-text">悲しい時にも</span>
+            </div>
+            <div class="emotion-food-card angry">
+                <span class="emotion-food-text">怒った時にも</span>
+            </div>
+            <div class="emotion-food-card tired">
+                <span class="emotion-food-text">疲れた時にも</span>
+            </div>
+        </div>
+    </header>
+    <main class="site-main">

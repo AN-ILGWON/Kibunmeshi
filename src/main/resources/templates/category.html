@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カテゴリ選択 - きぶんめし</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <a class="logo" th:href="@{/}">
+            <span class="logo-ja">きぶんめし</span>
+            <span class="logo-sub">Kibunmeshi</span>
+        </a>
+        
+        <!-- 感情・食べ物バナー -->
+        <div class="emotion-food-banner">
+            <div class="emotion-food-card happy">
+                <span class="emotion-food-text">嬉しい時にも</span>
+            </div>
+            <div class="emotion-food-card sad">
+                <span class="emotion-food-text">悲しい時にも</span>
+            </div>
+            <div class="emotion-food-card angry">
+                <span class="emotion-food-text">怒った時にも</span>
+            </div>
+            <div class="emotion-food-card tired">
+                <span class="emotion-food-text">疲れた時にも</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="site-main">
+        <section class="selected-emotion"
+                 th:style="|background-color: ${emotion.colorCode}20; border-color: ${emotion.colorCode};|">
+            <span class="selected-emoji" th:text="${emotion.emoji}">😊</span>
+            <p class="selected-text">【<span th:text="${emotion.label}">うれしい</span>】気分にはどんな食べ物が食べたい？</p>
+        </section>
+
+        <h2 class="section-title">カテゴリを選ぶ</h2>
+
+        <section class="category-grid" aria-label="カテゴリ選択">
+            <a th:each="category : ${categories}"
+               class="category-btn"
+               th:href="@{/loading(emotion=${emotion.id}, category=${category.id})}">
+                <span class="category-icon" th:text="${category.icon}">🥘</span>
+                <span class="category-label" th:text="${category.label}">韓国料理</span>
+            </a>
+        </section>
+
+        <div class="back-link-wrap">
+            <a class="back-link" th:href="@{/}">← 気分を選び直す</a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 きぶんめし (Kibunmeshi) - 今日の気分にぴったりのごはんを</p>
+    </footer>
+</body>
+</html>

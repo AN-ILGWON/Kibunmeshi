@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kibunmeshi.repository.RecommendationLogMapper">
+
+    <resultMap id="RecommendationLogResultMap" type="com.kibunmeshi.domain.RecommendationLog">
+        <id property="id" column="id"/>
+        <result property="emotion" column="emotion"/>
+        <result property="genre" column="genre"/>
+        <result property="dishName" column="dish_name"/>
+        <result property="description" column="description"/>
+        <result property="imagePrompt" column="image_prompt"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.kibunmeshi.domain.RecommendationLog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO recommendation_logs (emotion, genre, dish_name, description, image_prompt)
+        VALUES (#{emotion}, #{genre}, #{dishName}, #{description}, #{imagePrompt})
+    </insert>
+
+</mapper>

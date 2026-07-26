@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイページ（感情日記）- きぶんめし</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <a class="logo" th:href="@{/}">
+            <img th:src="@{/images/Kibunmeshi_logo.png}" alt="きぶんめし" class="logo-image">
+        </a>
+        
+        <!-- 感情・食べ物バナー -->
+        <div class="emotion-food-banner">
+            <div class="emotion-food-card happy">
+                <span class="emotion-food-text">嬉しい時にも</span>
+            </div>
+            <div class="emotion-food-card sad">
+                <span class="emotion-food-text">悲しい時にも</span>
+            </div>
+            <div class="emotion-food-card angry">
+                <span class="emotion-food-text">怒った時にも</span>
+            </div>
+            <div class="emotion-food-card tired">
+                <span class="emotion-food-text">疲れた時にも</span>
+            </div>
+        </div>
+        
+        <nav class="site-nav">
+            <a th:href="@{/mypage}" class="nav-link"
+               th:classappend="${viewMode == 'all'} ? ' active' : ''">ぜんぶ</a>
+            <a th:href="@{/mypage/favorites}" class="nav-link"
+               th:classappend="${viewMode == 'favorites'} ? ' active' : ''">★ コレクション</a>
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <button type="submit" class="nav-link nav-logout">ログアウト</button>
+            </form>
+        </nav>
+    </header>
+
+    <main class="site-main">
+        <section class="mypage-header">
+            <h1 class="mypage-greeting"><span th:text="${user.nickname}">ユーザー</span>のカードコレクション</h1>
+            <p class="mypage-stats">
+                <span class="stat">
+                    <strong th:text="${totalCount}">0</strong>枚のカード
+                </span>
+                <span class="stat">
+                    ★ <strong th:text="${favCount}">0</strong>枚のお気に入り
+                </span>
+            </p>
+        </section>
+
+        <!-- 成功/エラーメッセージ -->
+        <div class="alert alert-success" th:if="${signupSuccess}" th:text="${signupSuccess}">
+            ようこそ！
+        </div>
+
+        <!-- 카드 0건인 경우 -->
+        <div class="empty-state" th:if="${#lists.isEmpty(cards)}">
+            <p class="empty-emoji">🍽️</p>
+            <p class="empty-text">まだカードがありません。<br>トップから気分を選んで、最初の1枚を集めよう！</p>
+            <a th:href="@{/}" class="btn btn-primary">トップへ</a>
+        </div>
+
+        <!-- Pokemon TCG Style Grid -->
+        <section class="card-grid" th:unless="${#lists.isEmpty(cards)}">
+            <a th:each="card : ${cards}"
+               th:href="@{/card-detail(historyId=${card.id})}"
+               class="pokemon-tcg-card">
+
+
+                <!-- TCG Header -->
+                <div class="tcg-header">
+                    <div class="tcg-title-group">
+                        <span class="tcg-stage" th:text="${card.isFavorite} ? 'レア' : 'たね'">たね</span>
+                        <h2 class="tcg-name" th:text="${card.food.name}">サムゲタン</h2>
+                    </div>
+                    <div class="tcg-hp-group">
+                        <span class="tcg-hp-label">HP</span>
+                        <span class="tcg-hp-value" th:text="${card.id != null ? (card.id % 150 + 50) : 200}">200</span>
+                        <span class="tcg-type-icon" th:text="${card.category != null ? card.category.icon : '🍱'}">🥘</span>
+                    </div>
+                </div>
+
+                <!-- TCG Main Image Frame -->
+                <div class="tcg-image-frame" style="height: 180px;">
+                    <img class="tcg-image"
+                         th:src="${card.food.unsplashImageUrl}"
+                         th:alt="${card.food.name}"
+                         loading="lazy"
+                         onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400';">
+                    <span class="tcg-rarity-badge" th:text="${card.isFavorite} ? 'UR ✦ EX' : (${card.isPublic} ? 'SSR ✦ EX' : 'SR ✦')">SSR ✦ EX</span>
+                </div>
+
+                <!-- TCG Moves Box -->
+                <div class="tcg-moves-box" style="padding: 10px; font-size: 12px;">
+                    <div class="tcg-move-item" th:if="${card.food.description}">
+                        <p class="tcg-move-desc" style="line-clamp: 2; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden;" th:text="${card.food.description}">説明</p>
+                    </div>
+                    <div class="tcg-move-item" th:if="${card.adviceText}">
+                        <p class="tcg-move-desc" style="font-style: italic; color: #b45309;" th:text="${card.adviceText}">アドバイス</p>
+                    </div>
+                </div>
+
+                <!-- TCG Footer -->
+                <div class="tcg-footer">
+                    <div class="tcg-footer-left">
+                        <span th:text="${card.isFavorite} ? '⭐ お気に入り' : '☆ 通常'">☆</span>
+                        <span>•</span>
+                        <span th:text="${card.isPublic} ? '🌍 公開中' : '🔒 非公開'">非公開</span>
+                    </div>
+                    <div th:text="${#temporals.format(card.createdAt, 'yyyy.MM.dd')}">2026.01.01</div>
+                </div>
+            </a>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 きぶんめし (Kibunmeshi) - あなたの感情日記</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: kibunmeshi
+    runtime: java
+    plan: free
+    buildCommand: ./gradlew build
+    startCommand: java -jar build/libs/*.jar
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kibunmeshi-db
+          property: connectionString
+      - key: DATABASE_USERNAME
+        fromDatabase:
+          name: kibunmeshi-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: kibunmeshi-db
+          property: password
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_ENABLED
+        value: "false"
+      - key: UNSPLASH_ACCESS_KEY
+        sync: false
+
+databases:
+  - name: kibunmeshi-db
+    databaseName: kibunmeshi
+    user: kibunmeshi_user
+    plan: free

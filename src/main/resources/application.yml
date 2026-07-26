@@ -1,0 +1,87 @@
+spring:
+  application:
+    name: kibunmeshi
+  main:
+    allow-circular-references: true
+  
+  # データソース設定
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/kibunmeshi}
+    username: ${DATABASE_USERNAME:kibunmeshi_user}
+    password: ${DATABASE_PASSWORD:kibunmeshi_pass}
+    driver-class-name: org.postgresql.Driver
+  
+  # SQL初期化
+  sql:
+    init:
+      mode: never
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+  
+  # Thymeleaf設定
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML
+  
+  # HTTP文字コード設定
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+      force-request: true
+      force-response: true
+  
+  # セキュリティ設定（簡易）
+  security:
+    user:
+      name: admin
+      password: admin
+
+# MyBatis設定
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.kibunmeshi.domain
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
+
+# ロギング設定
+logging:
+  level:
+    com.kibunmeshi: DEBUG
+    org.springframework.web: INFO
+    org.mybatis: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Google Gemini API設定（AI推薦機能に必要）
+# AIを使用するには以下の手順でAPI Keyを設定してください：
+# 1. Google AI Studio (https://makersuite.google.com/app/apikey) でAPI Keyを取得
+# 2. 環境変数 GEMINI_API_KEY に設定するか、以下の api-key に直接入力
+# 3. enabled を true に変更
+gemini:
+  api-key: ${GEMINI_API_KEY:}
+  text-model: gemini-1.5-flash
+  image-model: gemini-1.5-flash
+  enabled: ${GEMINI_ENABLED:false}
+
+# Unsplash API設定（画像検索機能に必要）
+# 画像検索を使用するには以下の手順でAPI Keyを設定してください：
+# 1. Unsplash Developers (https://unsplash.com/developers) でAPI Keyを取得
+# 2. 環境変数 UNSPLASH_ACCESS_KEY に設定するか、以下の access-key に直接入力
+unsplash:
+  access-key: ${UNSPLASH_ACCESS_KEY:}
+
+# アプリケーション設定
+app:
+  name: きぶんめし
+  version: 1.0.0
+  default-food-image: https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400
+
+server:
+  port: 8084
