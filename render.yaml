@@ -4,7 +4,7 @@ services:
     runtime: java
     plan: free
     buildCommand: ./gradlew build
-    startCommand: java -jar build/libs/*.jar
+    startCommand: java -jar build/libs/kibunmeshi.jar
     envVars:
       - key: DATABASE_URL
         fromDatabase:
