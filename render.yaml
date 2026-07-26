@@ -27,6 +27,6 @@ services:
 
 databases:
   - name: kibunmeshi-db
-    databaseName: kibunmeshi
-    user: kibunmeshi_user
+    databaseName: kibunmeshi_db
+    user: kibunmeshi_db_user
     plan: free

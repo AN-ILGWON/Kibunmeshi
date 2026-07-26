@@ -6,8 +6,8 @@ spring:
   
   # データソース設定
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/kibunmeshi}
-    username: ${DATABASE_USERNAME:kibunmeshi_user}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/kibunmeshi_db}
+    username: ${DATABASE_USERNAME:kibunmeshi_db_user}
     password: ${DATABASE_PASSWORD:kibunmeshi_pass}
     driver-class-name: org.postgresql.Driver
   
