@@ -84,4 +84,4 @@ app:
   default-food-image: https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400
 
 server:
-  port: 8084
+  port: ${PORT:8084}
