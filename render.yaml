@@ -1,10 +1,10 @@
 services:
   - type: web
     name: kibunmeshi
-    runtime: java
+    env: docker
     plan: free
-    buildCommand: ./gradlew build
-    startCommand: java -jar build/libs/kibunmeshi.jar
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: DATABASE_URL
         fromDatabase:
