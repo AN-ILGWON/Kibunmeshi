@@ -54,6 +54,17 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+// Ensure bootJar is enabled
+bootJar {
+	enabled = true
+	archiveFileName = 'kibunmeshi.jar'
+}
+
+// Disable plain jar
+jar {
+	enabled = false
+}
+
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
